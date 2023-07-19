@@ -41,11 +41,18 @@ def get_pcd(rgbd: o3d.geometry.RGBDImage) -> o3d.geometry.PointCloud:
 
     return pcd
 
+def rgbd2pcd(color: np.ndarray, depth: np.ndarray) -> o3d.geometry.PointCloud:
+    rgbd = get_rgbd(color, depth)
+    pcd = get_pcd(rgbd)
+    return pcd
+
 def get_down_pcd(pcd: o3d.geometry.PointCloud, size: float = 0.01) -> o3d.geometry.PointCloud:
     down_pcd = pcd.voxel_down_sample(voxel_size=size)
     return down_pcd
 
-def get_norm(pcd: o3d.geometry.PointCloud):
+def get_norm(pcd: o3d.geometry.PointCloud, voxel_size: float = 0.01, x: int = None, y: int = None):
+    pcd = get_down_pcd(pcd, voxel_size)
+
     pcd.normals = o3d.utility.Vector3dVector(np.zeros((1, 3)))
     pcd.estimate_normals()
     return pcd

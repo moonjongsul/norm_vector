@@ -11,9 +11,9 @@ def main():
 
     k = [[sensor.info.fx, 0, sensor.info.cx],
          [0, sensor.info.fy, sensor.info.cy],
-         [0, 0, 1]]
+         [0,              0,              1]]
     intrinsic = np.array(k)
-    print(intrinsic)
+    # print(intrinsic)
 
     while True:
         try:
@@ -21,13 +21,13 @@ def main():
         except:
             continue
 
-        rgbd = nv.get_rgbd(rgb, depth)
-        pcd  = nv.get_pcd(rgbd)
-        pcd  = nv.get_down_pcd(pcd)
-        pcd  = nv.get_norm(pcd)
+        pcd = nv.rgbd2pcd(rgb, depth)
+        pcd = nv.get_norm(pcd)
 
+        print(np.asarray(pcd.points).shape)
+        print(np.asarray(pcd.colors).shape)
         o3d.visualization.draw_geometries([pcd], point_show_normal=True)
-
+        print()
         # cv2.imshow('cv', rgb[:, :, ::-1])
         # if cv2.waitKey(1) & 0xFF == ord('q'):
         #     cv2.destroyAllWindows()
